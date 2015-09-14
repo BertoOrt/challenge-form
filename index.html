@@ -13,6 +13,8 @@
     <input id='computerVsPlayer' type="radio" name="playMode">
     <label for='computerVsRandom'>Computer vs Random</label>
     <input id='computerVsRandom' type="radio" name="playMode">
+    <label for='computerVsComputer'>Computer vs Computer</label>
+    <input id='computerVsComputer' type="radio" name="playMode">
     <div class="form">
       <p id='bank1' style="color: #F00"></p>
       <p id='bank2' style="color: #00F"></p>
@@ -27,6 +29,7 @@
     </div>
     <input id='btn' type="button" name="name" style='margin: 20px' value="submit">
     <textarea id='function' rows="15" cols="80" style="display: none"></textarea>
+    <textarea id='function2' rows="15" cols="80" style="display: none"></textarea>
     <p id='error'></p>
     <p id='winner'></p>
     <script type="text/javascript">
@@ -40,6 +43,7 @@
           this.playerTwoScore = 0
           this.computer = false
           this.againstRandom = false
+          this.againstComputer = false
         }
 
         Game.prototype.reset = function () {
@@ -57,9 +61,7 @@
             $('#player2').val('')
             this.playerOne.splice(this.playerOne.indexOf(Number(val1)), 1)
             this.playerTwo.splice(this.playerTwo.indexOf(Number(val2)), 1)
-            console.log(this.playerOnePlayed);
             this.playerOnePlayed.push(val1)
-            console.log(this.playerOnePlayed);
             this.playerTwoPlayed.push(val2)
             $('#bank1').text(this.playerOne.join(' '))
             $('#bank2').text(this.playerTwo.join(' '))
@@ -84,17 +86,14 @@
             }
           }
         }
-        // ***********************************
-        // AI logic example:
-        function gen() {
-          return function strategy(userPlayedArray,compPlayedArray) {
-            var compArray = [1,2,3,4,5,6,7,8,9,10]
-            compPlayedArray.forEach(function (e) {
-              compArray.splice(compArray.indexOf(e), 1)
-            })
-            var random = Math.floor(Math.random()*compArray.length)
-            return compArray[random]
-          }
+
+        function randomComputer(userPlayedArray,compPlayedArray) {
+          var compArray = [1,2,3,4,5,6,7,8,9,10]
+          compPlayedArray.forEach(function (e) {
+            compArray.splice(compArray.indexOf(e), 1)
+          })
+          var random = Math.floor(Math.random()*compArray.length)
+          return compArray[random]
         }
 
         Game.prototype.playComputer = function () {
@@ -134,9 +133,41 @@
         }
 
         Game.prototype.playComputerVsRandom = function () {
-          $("#error").text("Simulation not yet complete").css({"color": "#f00"})
-          $('#function').css({"display": "none"})
-          $('#button').css({"display": "none"})
+          var val1 = randomComputer(this.playerOnePlayed, this.playerTwoPlayed)
+          var strategy = window.gen()
+          var val2 = strategy(this.playerOnePlayed, this.playerTwoPlayed)
+          this.playerOne.splice(this.playerTwo.indexOf(val1), 1)
+          this.playerTwo.splice(this.playerTwo.indexOf(val2), 1)
+          this.playerOnePlayed.push(val1)
+          this.playerTwoPlayed.push(val2)
+          $('#bank1').text(this.playerOne.join(' '))
+          $('#bank2').text(this.playerTwo.join(' '))
+          $('#played1').text(this.playerOnePlayed.join(' '))
+          $('#played2').text(this.playerTwoPlayed.join(' '))
+          if (val1 - val2 == 0) {
+          } else if (val1 - val2 > 1) {
+            this.playerTwoScore++
+          } else if (val1 - val2 == 1) {
+            this.playerOneScore += 2
+          } else if (val1 - val2 == -1) {
+            this.playerTwoScore += 2
+          } else {
+            this.playerOneScore++
+          }
+          $('.score1').text(this.playerOneScore)
+          $('.score2').text(this.playerTwoScore)
+          if (this.playerOneScore >= 5) {
+            $('#winner').text('Your Function Won')
+          } else if (this.playerTwoScore >= 5) {
+            $('#winner').text('Random Computer Won')
+          } else {
+            this.playComputerVsRandom()
+          }
+        }
+
+        Game.prototype.playComputerVsComputer = function () {
+          $("#error").text("Computer vs Computer").css({"color": "#f00"})
+
         }
 
         var game = new Game();
@@ -148,28 +179,62 @@
 
         $('#computerVsPlayer').click(function () {
           game.computer = true
+          game.againstRandom = false
+          game.againstComputer = false
           $('#player2').css({"display": "none"})
+          $('.form').css({"display": "inline"})
           $('#function').css({"display": "block"})
+          $('#function2').css({"display": "none"})
         })
 
         $('#playerVsPlayer').click(function () {
           game.computer = false
+          game.againstRandom = false
+          game.againstComputer = false
           $('#player2').css({"display": "inline"})
+          $('.form').css({"display": "inline"})
           $('#function').css({"display": "none"})
+          $('#function2').css({"display": "none"})
         })
 
         $('#computerVsRandom').click(function () {
           game.computer = true
           game.againstRandom = true
+          game.againstComputer = false
           $('.form').css({"display": "none"})
           $('#function').css({"display": "block"})
+          $('#function2').css({"display": "none"})
+        })
+
+        $('#computerVsComputer').click(function () {
+          game.computer = true
+          game.againstRandom = false
+          game.againstComputer = true
+          $('.form').css({"display": "none"})
+          $('#function').css({"display": "block"})
+          $('#function2').css({"display": "block"})
         })
 
         $('#btn').click(function () {
           if (!game.computer) {
             game.playTwoPlayer()
           } else if (game.computer && game.againstRandom) {
+            $('#function').css({"display": "none"})
+            $('#button').css({"display": "none"})
+            var gen1 = $('#function').val()
+            var geval = eval
+            geval(gen1)
             game.playComputerVsRandom()
+          } else if (game.computer && game.againstComputer) {
+            $('#function').css({"display": "none"})
+            $('#function2').css({"display": "none"})
+            $('#button').css({"display": "none"})
+            var gen1 = $('#function').val()
+            var gen2 = $('#function2').val()
+            var geval = eval
+            geval(gen1)
+            geval(gen2)
+            game.playComputerVsComputer()
           } else {
             var gen = $('#function').val()
             if (gen = "") {
