@@ -32,157 +32,147 @@
     <script type="text/javascript">
       $(document).ready(function () {
         var Game = function () {
-          this.playerOne = [1,2,3,4,5,6,7,8,9,10]
-          this.playerTwo = [1,2,3,4,5,6,7,8,9,10]
-          this.playerOnePlayed = []
-          this.playerTwoPlayed = []
-          this.playerOneScore = 0
-          this.playerTwoScore = 0
-          this.computer = false
-          this.againstRandom = false
-        }
-
+          this.playerOne = [1,2,3,4,5,6,7,8,9,10];
+          this.playerTwo = [1,2,3,4,5,6,7,8,9,10];
+          this.playerOnePlayed = [];
+          this.playerTwoPlayed = [];
+          this.playerOneScore = 0;
+          this.playerTwoScore = 0;
+          this.computer = false;
+          this.againstRandom = false;
+        };
         Game.prototype.reset = function () {
-          this.playerOne = [1,2,3,4,5,6,7,8,9,10]
-          this.playerTwo = [1,2,3,4,5,6,7,8,9,10]
-        }
-
+          this.playerOne = [1,2,3,4,5,6,7,8,9,10];
+          this.playerTwo = [1,2,3,4,5,6,7,8,9,10];
+        };
         Game.prototype.playTwoPlayer = function () {
-          var val1 = $('#player1').val()
-          var val2 = $('#player2').val()
+          var val1 = $('#player1').val();
+          var val2 = $('#player2').val();
           if (this.playerOne.indexOf(Number(val1)) < 0 || this.playerTwo.indexOf(Number(val2)) < 0) {
-            $("#error").text("invalid input").css({"color": "#f00"})
+            $("#error").text("invalid input").css({"color": "#f00"});
           } else {
-            $('#player1').val('')
-            $('#player2').val('')
-            this.playerOne.splice(this.playerOne.indexOf(Number(val1)), 1)
-            this.playerTwo.splice(this.playerTwo.indexOf(Number(val2)), 1)
+            $('#player1').val('');
+            $('#player2').val('');
+            this.playerOne.splice(this.playerOne.indexOf(Number(val1)), 1);
+            this.playerTwo.splice(this.playerTwo.indexOf(Number(val2)), 1);
             console.log(this.playerOnePlayed);
-            this.playerOnePlayed.push(val1)
+            this.playerOnePlayed.push(val1);
             console.log(this.playerOnePlayed);
-            this.playerTwoPlayed.push(val2)
-            $('#bank1').text(this.playerOne.join(' '))
-            $('#bank2').text(this.playerTwo.join(' '))
-            $('#played1').text(this.playerOnePlayed.join(' '))
-            $('#played2').text(this.playerTwoPlayed.join(' '))
-            if (val1 - val2 == 0) {
+            this.playerTwoPlayed.push(val2);
+            $('#bank1').text(this.playerOne.join(' '));
+            $('#bank2').text(this.playerTwo.join(' '));
+            $('#played1').text(this.playerOnePlayed.join(' '));
+            $('#played2').text(this.playerTwoPlayed.join(' '));
+            if (val1 - val2 === 0) {
             } else if (val1 - val2 > 1) {
-              this.playerTwoScore++
+              this.playerTwoScore++;
             } else if (val1 - val2 == 1) {
-              this.playerOneScore += 2
+              this.playerOneScore += 2;
             } else if (val1 - val2 == -1) {
-              this.playerTwoScore += 2
+              this.playerTwoScore += 2;
             } else {
-              this.playerOneScore++
+              this.playerOneScore++;
             }
-            $('.score1').text(this.playerOneScore)
-            $('.score2').text(this.playerTwoScore)
+            $('.score1').text(this.playerOneScore);
+            $('.score2').text(this.playerTwoScore);
             if (this.playerOneScore >= 5) {
-              $('#winner').text('Player One Wins')
+              $('#winner').text('Player One Wins');
             } else if (this.playerTwoScore >= 5) {
-              $('#winner').text('Player Two Wins')
+              $('#winner').text('Player Two Wins');
             }
           }
-        }
+        };
         // ***********************************
         // AI logic example:
         function gen() {
           return function strategy(userPlayedArray,compPlayedArray) {
-            var compArray = [1,2,3,4,5,6,7,8,9,10]
+            var compArray = [1,2,3,4,5,6,7,8,9,10];
             compPlayedArray.forEach(function (e) {
-              compArray.splice(compArray.indexOf(e), 1)
-            })
-            var random = Math.floor(Math.random()*compArray.length)
-            return compArray[random]
-          }
+              compArray.splice(compArray.indexOf(e), 1);
+            });
+            var random = Math.floor(Math.random()*compArray.length);
+            return compArray[random];
+          };
         }
-
         Game.prototype.playComputer = function () {
-          var val1 = $('#player1').val()
+          var val1 = $('#player1').val();
           if (this.playerOne.indexOf(Number(val1)) < 0) {
-            $("#error").text("invalid input").css({"color": "#f00"})
+            $("#error").text("invalid input").css({"color": "#f00"});
           } else {
-            $('#player1').val('')
-            this.playerOne.splice(this.playerOne.indexOf(Number(val1)), 1)
-            var strategy = window.gen()
-            var val2 = strategy(this.playerOnePlayed, this.playerTwoPlayed)
-            this.playerTwo.splice(this.playerTwo.indexOf(val2), 1)
-            this.playerOnePlayed.push(val1)
-            this.playerTwoPlayed.push(val2)
-            $('#bank1').text(this.playerOne.join(' '))
-            $('#bank2').text(this.playerTwo.join(' '))
-            $('#played1').text(this.playerOnePlayed.join(' '))
-            $('#played2').text(this.playerTwoPlayed.join(' '))
-            if (val1 - val2 == 0) {
+            $('#player1').val('');
+            this.playerOne.splice(this.playerOne.indexOf(Number(val1)), 1);
+            var strategy = gen();
+            var val2 = strategy(this.playerOnePlayed, this.playerTwoPlayed);
+            this.playerTwo.splice(this.playerTwo.indexOf(val2), 1);
+            this.playerOnePlayed.push(val1);
+            this.playerTwoPlayed.push(val2);
+            $('#bank1').text(this.playerOne.join(' '));
+            $('#bank2').text(this.playerTwo.join(' '));
+            $('#played1').text(this.playerOnePlayed.join(' '));
+            $('#played2').text(this.playerTwoPlayed.join(' '));
+            if (val1 - val2 === 0) {
             } else if (val1 - val2 > 1) {
-              this.playerTwoScore++
+              this.playerTwoScore++;
             } else if (val1 - val2 == 1) {
-              this.playerOneScore += 2
+              this.playerOneScore += 2;
             } else if (val1 - val2 == -1) {
-              this.playerTwoScore += 2
+              this.playerTwoScore += 2;
             } else {
-              this.playerOneScore++
+              this.playerOneScore++;
             }
-            $('.score1').text(this.playerOneScore)
-            $('.score2').text(this.playerTwoScore)
+            $('.score1').text(this.playerOneScore);
+            $('.score2').text(this.playerTwoScore);
             if (this.playerOneScore >= 5) {
-              $('#winner').text('Player One Wins')
+              $('#winner').text('Player One Wins');
             } else if (this.playerTwoScore >= 5) {
-              $('#winner').text('Player Two Wins')
+              $('#winner').text('Player Two Wins');
             }
           }
-        }
-
+        };
         Game.prototype.playComputerVsRandom = function () {
-          $("#error").text("Simulation not yet complete").css({"color": "#f00"})
-          $('#function').css({"display": "none"})
-          $('#button').css({"display": "none"})
-        }
-
+          $("#error").text("Simulation not yet complete").css({"color": "#f00"});
+          $('#function').css({"display": "none"});
+          $('#button').css({"display": "none"});
+        };
         var game = new Game();
-
-        $('#bank1').text(game.playerOne.join(' '))
-        $('#bank2').text(game.playerTwo.join(' '))
-        $('.score1').text(game.playerOneScore)
-        $('.score2').text(game.playerTwoScore)
-
+        $('#bank1').text(game.playerOne.join(' '));
+        $('#bank2').text(game.playerTwo.join(' '));
+        $('.score1').text(game.playerOneScore);
+        $('.score2').text(game.playerTwoScore);
         $('#computerVsPlayer').click(function () {
-          game.computer = true
-          $('#player2').css({"display": "none"})
-          $('#function').css({"display": "block"})
-        })
-
+          game.computer = true;
+          $('#player2').css({"display": "none"});
+          $('#function').css({"display": "block"});
+        });
         $('#playerVsPlayer').click(function () {
-          game.computer = false
-          $('#player2').css({"display": "inline"})
-          $('#function').css({"display": "none"})
-        })
-
+          game.computer = false;
+          $('#player2').css({"display": "inline"});
+          $('#function').css({"display": "none"});
+        });
         $('#computerVsRandom').click(function () {
-          game.computer = true
-          game.againstRandom = true
-          $('.form').css({"display": "none"})
-          $('#function').css({"display": "block"})
-        })
-
+          game.computer = true;
+          game.againstRandom = true;
+          $('.form').css({"display": "none"});
+          $('#function').css({"display": "block"});
+        });
         $('#btn').click(function () {
           if (!game.computer) {
-            game.playTwoPlayer()
+            game.playTwoPlayer();
           } else if (game.computer && game.againstRandom) {
-            game.playComputerVsRandom()
+            game.playComputerVsRandom();
           } else {
-            var gen = $('#function').val()
+            var gen = $('#function').val();
             if (gen = "") {
             } else {
-              $('#function').css({"display": "none"})
-              var gen = $('#function').val()
-              var geval = eval
-              geval(gen)
-              game.playComputer()
+              $('#function').css({"display": "none"});
+              gen = $('#function').val();
+              var geval = eval;
+              geval(gen);
+              game.playComputer();
             }
           }
-        })
-      })
+        });
+      });
     </script>
   </body>
 </html>
