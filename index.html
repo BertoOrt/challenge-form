@@ -32,6 +32,7 @@
     <textarea id='function2' rows="15" cols="80" style="display: none"></textarea>
     <p id='error'></p>
     <p id='winner'></p>
+    <p id='results'></p>
     <script type="text/javascript">
       $(document).ready(function () {
         var Game = function () {
@@ -44,6 +45,7 @@
           this.computer = false
           this.againstRandom = false
           this.againstComputer = false
+          this.results = {function: 0, random: 0, ties: 0}
         }
 
         Game.prototype.reset = function () {
@@ -157,17 +159,50 @@
           $('.score1').text(this.playerOneScore)
           $('.score2').text(this.playerTwoScore)
           if (this.playerOneScore >= 5) {
-            $('#winner').text('Your Function Won')
+            this.results.function = this.results.function + 1
           } else if (this.playerTwoScore >= 5) {
-            $('#winner').text('Random Computer Won')
+            this.results.random = this.results.random + 1
+          } else if (this.playerOne.length == 0 && this.playerTwo.length == 0) {
+            this.results.ties = this.results.ties + 1
           } else {
             this.playComputerVsRandom()
           }
         }
 
         Game.prototype.playComputerVsComputer = function () {
-          $("#error").text("Computer vs Computer").css({"color": "#f00"})
-
+          var strategy = window.gen()
+          var val1 = strategy(this.playerOnePlayed, this.playerTwoPlayed)
+          var strategy2 = window.gen2()
+          var val2 = strategy2(this.playerOnePlayed, this.playerTwoPlayed)
+          this.playerOne.splice(this.playerTwo.indexOf(val1), 1)
+          this.playerTwo.splice(this.playerTwo.indexOf(val2), 1)
+          this.playerOnePlayed.push(val1)
+          this.playerTwoPlayed.push(val2)
+          $('#bank1').text(this.playerOne.join(' '))
+          $('#bank2').text(this.playerTwo.join(' '))
+          $('#played1').text(this.playerOnePlayed.join(' '))
+          $('#played2').text(this.playerTwoPlayed.join(' '))
+          if (val1 - val2 == 0) {
+          } else if (val1 - val2 > 1) {
+            this.playerTwoScore++
+          } else if (val1 - val2 == 1) {
+            this.playerOneScore += 2
+          } else if (val1 - val2 == -1) {
+            this.playerTwoScore += 2
+          } else {
+            this.playerOneScore++
+          }
+          $('.score1').text(this.playerOneScore)
+          $('.score2').text(this.playerTwoScore)
+          if (this.playerOneScore >= 5) {
+            this.results.function = this.results.function + 1
+          } else if (this.playerTwoScore >= 5) {
+            this.results.random = this.results.random + 1
+          } else if (this.playerOne.length == 0 && this.playerTwo.length == 0) {
+            this.results.ties = this.results.ties + 1
+          } else {
+            this.playComputerVsComputer()
+          }
         }
 
         var game = new Game();
@@ -224,7 +259,25 @@
             var gen1 = $('#function').val()
             var geval = eval
             geval(gen1)
-            game.playComputerVsRandom()
+            var i = 0;
+            while (i < 1000) {
+              game.playComputerVsRandom()
+              game.playerOne = [1,2,3,4,5,6,7,8,9,10]
+              game.playerTwo = [1,2,3,4,5,6,7,8,9,10]
+              game.playerOnePlayed = []
+              game.playerTwoPlayed = []
+              game.playerOneScore = 0
+              game.playerTwoScore = 0
+              i++
+            }
+            if (game.results.random > game.results.function) {
+              $('#winner').text("Sorry, you couldn't beat random")
+            } else if (game.results.random < game.results.function) {
+              $('#winner').text("Yes! your function won!")
+            } else {
+              $('#winner').text("damn, it's a tie")
+            }
+            $('#results').text('you: '+ game.results.function+ ' computer: '+ game.results.random+ ' ties: '+ game.results.ties)
           } else if (game.computer && game.againstComputer) {
             $('#function').css({"display": "none"})
             $('#function2').css({"display": "none"})
@@ -234,7 +287,25 @@
             var geval = eval
             geval(gen1)
             geval(gen2)
-            game.playComputerVsComputer()
+            var i = 0;
+            while (i < 1000) {
+              game.playComputerVsComputer()
+              game.playerOne = [1,2,3,4,5,6,7,8,9,10]
+              game.playerTwo = [1,2,3,4,5,6,7,8,9,10]
+              game.playerOnePlayed = []
+              game.playerTwoPlayed = []
+              game.playerOneScore = 0
+              game.playerTwoScore = 0
+              i++
+            }
+            if (game.results.random > game.results.function) {
+              $('#winner').text("Sorry, you couldn't beat random")
+            } else if (game.results.random < game.results.function) {
+              $('#winner').text("Yes! your function won!")
+            } else {
+              $('#winner').text("damn, it's a tie")
+            }
+            $('#results').text('you: '+ game.results.function+ ' computer: '+ game.results.random + ' ties: '+ game.results.ties)
           } else {
             var gen = $('#function').val()
             if (gen = "") {
