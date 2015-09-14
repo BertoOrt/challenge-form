@@ -76,7 +76,7 @@
               this.playerOneScore += 2
             } else if (val1 - val2 == -1) {
               this.playerTwoScore += 2
-            } else {
+            } else if (val2 - val1 > 1) {
               this.playerOneScore++
             }
             $('.score1').text(this.playerOneScore)
@@ -121,7 +121,7 @@
               this.playerOneScore += 2
             } else if (val1 - val2 == -1) {
               this.playerTwoScore += 2
-            } else {
+            } else if (val2 - val1 > 1) {
               this.playerOneScore++
             }
             $('.score1').text(this.playerOneScore)
@@ -153,7 +153,7 @@
             this.playerOneScore += 2
           } else if (val1 - val2 == -1) {
             this.playerTwoScore += 2
-          } else {
+          } else if (val2 - val1 > 1) {
             this.playerOneScore++
           }
           $('.score1').text(this.playerOneScore)
@@ -189,14 +189,14 @@
             this.playerOneScore += 2
           } else if (val1 - val2 == -1) {
             this.playerTwoScore += 2
-          } else {
+          } else if (val2 - val1 > 1) {
             this.playerOneScore++
           }
           $('.score1').text(this.playerOneScore)
           $('.score2').text(this.playerTwoScore)
-          if (this.playerOneScore >= 5) {
+          if (this.playerOneScore >= 5 && this.playerTwoScore < 5) {
             this.results.function = this.results.function + 1
-          } else if (this.playerTwoScore >= 5) {
+          } else if (this.playerTwoScore >= 5 && this.playerOneScore < 5) {
             this.results.random = this.results.random + 1
           } else if (this.playerOne.length == 0 && this.playerTwo.length == 0) {
             this.results.ties = this.results.ties + 1
@@ -282,10 +282,10 @@
             $('#function').css({"display": "none"})
             $('#function2').css({"display": "none"})
             $('#button').css({"display": "none"})
-            var gen1 = $('#function').val()
+            var gen = $('#function').val()
             var gen2 = $('#function2').val()
             var geval = eval
-            geval(gen1)
+            geval(gen)
             geval(gen2)
             var i = 0;
             while (i < 1000) {
