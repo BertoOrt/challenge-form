@@ -57,12 +57,14 @@
             $('#player2').val('')
             this.playerOne.splice(this.playerOne.indexOf(Number(val1)), 1)
             this.playerTwo.splice(this.playerTwo.indexOf(Number(val2)), 1)
+            console.log(this.playerOnePlayed);
             this.playerOnePlayed.push(val1)
+            console.log(this.playerOnePlayed);
             this.playerTwoPlayed.push(val2)
             $('#bank1').text(this.playerOne.join(' '))
             $('#bank2').text(this.playerTwo.join(' '))
-            $('#played1').text(this.playerOnePlayed.reverse().join(' '))
-            $('#played2').text(this.playerTwoPlayed.reverse().join(' '))
+            $('#played1').text(this.playerOnePlayed.join(' '))
+            $('#played2').text(this.playerTwoPlayed.join(' '))
             if (val1 - val2 == 0) {
             } else if (val1 - val2 > 1) {
               this.playerTwoScore++
