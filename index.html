@@ -7,19 +7,25 @@
   </head>
   <body>
     <h1>Challenge</h1>
-    <label>Computer</label>
-    <input id='computer' type="checkbox" name="name">
-    <p id='bank1' style="color: #F00"></p>
-    <p id='bank2' style="color: #00F"></p>
-    <p id='played1'style="color: #F00"> - </p>
-    <p id='played2'style="color: #00F"> - </p>
-    <input id='player1' style="border: 1px solid #F00" type="password" name="name">
-    <input id='player2' style="border: 1px solid #00F" type="password" name="name">
-    <input id='button' type="button" name="name" value="submit">
-    <div>
-      <div class="score1" style="color: #F00; display:inline-block; margin-right: 120px"></div>
-      <div class="score2" style="color: #00F; display:inline-block"></div>
+    <label for='playerVsPlayer'>Player vs Player</label>
+    <input id='playerVsPlayer' type="radio" name="playMode" checked>
+    <label for='computerVsPlayer'>Computer vs Player</label>
+    <input id='computerVsPlayer' type="radio" name="playMode">
+    <label for='computerVsRandom'>Computer vs Random</label>
+    <input id='computerVsRandom' type="radio" name="playMode">
+    <div class="form">
+      <p id='bank1' style="color: #F00"></p>
+      <p id='bank2' style="color: #00F"></p>
+      <p id='played1'style="color: #F00"> - </p>
+      <p id='played2'style="color: #00F"> - </p>
+      <input id='player1' style="border: 1px solid #F00" type="password" name="name">
+      <input id='player2' style="border: 1px solid #00F" type="password" name="name">
+      <div>
+        <div class="score1" style="color: #F00; display:inline-block; margin-right: 120px"></div>
+        <div class="score2" style="color: #00F; display:inline-block"></div>
+      </div>
     </div>
+    <input id='btn' type="button" name="name" style='margin: 20px' value="submit">
     <textarea id='function' rows="15" cols="80" style="display: none"></textarea>
     <p id='error'></p>
     <p id='winner'></p>
@@ -33,6 +39,7 @@
           this.playerOneScore = 0
           this.playerTwoScore = 0
           this.computer = false
+          this.againstRandom = false
         }
 
         Game.prototype.reset = function () {
@@ -124,6 +131,12 @@
           }
         }
 
+        Game.prototype.playComputerVsRandom = function () {
+          $("#error").text("Simulation not yet complete").css({"color": "#f00"})
+          $('#function').css({"display": "none"})
+          $('#button').css({"display": "none"})
+        }
+
         var game = new Game();
 
         $('#bank1').text(game.playerOne.join(' '))
@@ -131,28 +144,40 @@
         $('.score1').text(game.playerOneScore)
         $('.score2').text(game.playerTwoScore)
 
-        $('#computer').click(function () {
-          game.computer = !game.computer
-          if (game.computer) {
-            $('#player2').css({"display": "none"})
-            $('#player2').css({"display": "none"})
-            $('#function').css({"display": "inline"})
-          } else {
-            $('#player2').css({"display": "inline"})
-            $('#player2').css({"display": "inline"})
-            $('#function').css({"display": "none"})
-          }
+        $('#computerVsPlayer').click(function () {
+          game.computer = true
+          $('#player2').css({"display": "none"})
+          $('#function').css({"display": "block"})
         })
 
-        $('#button').click(function () {
+        $('#playerVsPlayer').click(function () {
+          game.computer = false
+          $('#player2').css({"display": "inline"})
+          $('#function').css({"display": "none"})
+        })
+
+        $('#computerVsRandom').click(function () {
+          game.computer = true
+          game.againstRandom = true
+          $('.form').css({"display": "none"})
+          $('#function').css({"display": "block"})
+        })
+
+        $('#btn').click(function () {
           if (!game.computer) {
             game.playTwoPlayer()
+          } else if (game.computer && game.againstRandom) {
+            game.playComputerVsRandom()
           } else {
-            $('#function').css({"display": "none"})
             var gen = $('#function').val()
-            var geval = eval
-            geval(gen)
-            game.playComputer()
+            if (gen = "") {
+            } else {
+              $('#function').css({"display": "none"})
+              var gen = $('#function').val()
+              var geval = eval
+              geval(gen)
+              game.playComputer()
+            }
           }
         })
       })
