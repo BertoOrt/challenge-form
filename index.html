@@ -7,22 +7,92 @@
   </head>
   <body>
     <h1>Challenge</h1>
-    <label for='playerVsPlayer'>Player vs Player</label>
     <input id='playerVsPlayer' type="radio" name="playMode" checked>
-    <label for='computerVsPlayer'>Computer vs Player</label>
+    <label for='playerVsPlayer'>Player vs Player</label>
     <input id='computerVsPlayer' type="radio" name="playMode">
-    <label for='computerVsRandom'>Computer vs Random</label>
+    <label for='computerVsPlayer'>Computer vs Player</label>
     <input id='computerVsRandom' type="radio" name="playMode">
-    <label for='computerVsComputer'>Computer vs Computer</label>
+    <label for='computerVsRandom'>Computer vs Random</label>
     <input id='computerVsComputer' type="radio" name="playMode">
+    <label for='computerVsComputer'>Computer vs Computer</label>
+    <p style='text-align: center' id='pvp'>
+      please refresh the page every time before starting a new game in all categories
+    </p>
+    <div id='cvp' style=' display: none'>
+      <p style='text-align: center'>
+        To play, paste your function below, input your first number and hit submit.
+      </p>
+      <p style='text-align: center'>
+        Your function should be called gen() and return the logic function that takes the two players played arrays like so:
+      </p>
+      <pre>
+        function gen() {
+          return function randomComputer(userPlayedArray,compPlayedArray) {
+            var compArray = [1,2,3,4,5,6,7,8,9,10]
+            compPlayedArray.forEach(function (e) {
+              compArray.splice(compArray.indexOf(e), 1)
+            })
+            var random = Math.floor(Math.random()*compArray.length)
+            return compArray[random]
+          }
+        }
+      </pre>
+    </div>
+    <div id='cvr' style=' display: none'>
+      <p style='text-align: center'>
+        To play, paste your function below and hit submit
+      </p>
+      <p style='text-align: center'>
+        Your function should be called gen() and return the logic function that takes the two players played arrays like so:
+      </p>
+      <pre>
+        function gen() {
+          return function randomComputer(userPlayedArray,compPlayedArray) {
+            var compArray = [1,2,3,4,5,6,7,8,9,10]
+            compPlayedArray.forEach(function (e) {
+              compArray.splice(compArray.indexOf(e), 1)
+            })
+            var random = Math.floor(Math.random()*compArray.length)
+            return compArray[random]
+          }
+        }
+      </pre>
+    </div>
+    <div id='cvc' style=' display: none'>
+      <p style='text-align: center'>
+        To play, paste both functions below. Make sure one of them is called gen2()
+      </p>
+      <p style='text-align: center'>
+        Your function should be called gen() and return the logic function that takes the two players played arrays like so:
+      </p>
+      <pre>
+        function gen() {
+          return function randomComputer(userPlayedArray,compPlayedArray) {
+            var compArray = [1,2,3,4,5,6,7,8,9,10]
+            compPlayedArray.forEach(function (e) {
+              compArray.splice(compArray.indexOf(e), 1)
+            })
+            var random = Math.floor(Math.random()*compArray.length)
+            return compArray[random]
+          }
+        }
+      </pre>
+    </div>
     <div class="form">
+      <h3>
+        remaining
+      </h3>
       <p id='bank1' style="color: #F00"></p>
       <p id='bank2' style="color: #00F"></p>
+      <h3>
+        played
+      </p>
       <p id='played1'style="color: #F00"> - </p>
       <p id='played2'style="color: #00F"> - </p>
       <input id='player1' style="border: 1px solid #F00" type="password" name="name">
       <input id='player2' style="border: 1px solid #00F" type="password" name="name">
       <div>
+        <h3>score</h3>
         <div class="score1" style="color: #F00; display:inline-block; margin-right: 120px"></div>
         <div class="score2" style="color: #00F; display:inline-block"></div>
       </div>
@@ -221,7 +291,7 @@
           }
         }
 
-        var game = new Game();
+        var game = new Game()
 
         $('#bank1').text(game.playerOne.join(' '))
         $('#bank2').text(game.playerTwo.join(' '))
@@ -236,6 +306,10 @@
           $('.form').css({"display": "inline"})
           $('#function').css({"display": "block"})
           $('#function2').css({"display": "none"})
+          $('#pvp').css({"display": "none"})
+          $('#cvp').css({"display": "block"})
+          $('#cvr').css({"display": "none"})
+          $('#cvc').css({"display": "none"})
         })
 
         $('#playerVsPlayer').click(function () {
@@ -246,6 +320,10 @@
           $('.form').css({"display": "inline"})
           $('#function').css({"display": "none"})
           $('#function2').css({"display": "none"})
+          $('#pvp').css({"display": "block"})
+          $('#cvp').css({"display": "none"})
+          $('#cvr').css({"display": "none"})
+          $('#cvc').css({"display": "none"})
         })
 
         $('#computerVsRandom').click(function () {
@@ -255,6 +333,10 @@
           $('.form').css({"display": "none"})
           $('#function').css({"display": "block"})
           $('#function2').css({"display": "none"})
+          $('#pvp').css({"display": "none"})
+          $('#cvp').css({"display": "none"})
+          $('#cvr').css({"display": "block"})
+          $('#cvc').css({"display": "none"})
         })
 
         $('#computerVsComputer').click(function () {
@@ -264,6 +346,10 @@
           $('.form').css({"display": "none"})
           $('#function').css({"display": "block"})
           $('#function2').css({"display": "block"})
+          $('#pvp').css({"display": "none"})
+          $('#cvp').css({"display": "none"})
+          $('#cvr').css({"display": "none"})
+          $('#cvc').css({"display": "block"})
         })
 
         $('#btn').click(function () {
@@ -305,7 +391,6 @@
             geval(gen2)
             var i = 0;
             while (i < 1000) {
-              console.log(i);
               game.playComputerVsComputer()
               game.playerOne = [1,2,3,4,5,6,7,8,9,10]
               game.playerTwo = [1,2,3,4,5,6,7,8,9,10]
